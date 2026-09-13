@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Captain Pin Board</title>
+<link rel="stylesheet" href="../../common/common.css" />
+<link rel="stylesheet" href="popup.css" />
+</head>
+<body class="cappb-popup-body">
+  <header class="cappb-header cappb-popup-header">
+    <div class="cappb-brand">
+      <span class="cappb-pin-dot"></span>
+      <span class="cappb-brand-name">Captain Pin Board</span>
+    </div>
+    <button id="openBoard" class="cappb-btn cappb-link-btn">Full board</button>
+  </header>
+
+  <!-- View 1: quick pin plus the collections list -->
+  <section id="homeView">
+    <div class="cappb-quick-pin">
+      <label class="cappb-field-label" for="msgText">Message</label>
+      <textarea id="msgText" class="cappb-field cappb-textarea" placeholder="Paste or type the message you want to keep" rows="3"></textarea>
+
+      <label class="cappb-field-label" for="groupSelect">Save to collection</label>
+      <div class="cappb-row">
+        <select id="groupSelect" class="cappb-field"></select>
+        <button id="saveBtn" class="cappb-btn cappb-btn--primary cappb-save-btn">Pin</button>
+      </div>
+      <p id="statusMsg" class="cappb-status"></p>
+    </div>
+
+    <div class="cappb-collections-head">
+      <h2>Your collections</h2>
+      <button id="newGroupBtn" class="cappb-btn cappb-btn--ghost cappb-btn--sm">New</button>
+    </div>
+    <div id="newGroupRow" class="cappb-row cappb-hidden cappb-inline-new">
+      <input id="newGroupName" class="cappb-field" type="text" placeholder="Collection name, for example Marketing" />
+      <button id="createGroupBtn" class="cappb-btn cappb-btn--ghost">Add</button>
+    </div>
+
+    <ul id="collectionsList" class="cappb-collections-list"></ul>
+  </section>
+
+  <!-- View 2: inside a single collection -->
+  <section id="detailView" class="cappb-hidden">
+    <div class="cappb-detail-head">
+      <button id="backBtn" class="cappb-btn cappb-btn--icon" title="Back to collections">Back</button>
+      <input id="detailName" class="cappb-detail-name" type="text" />
+      <button id="deleteGroupBtn" class="cappb-btn cappb-btn--icon cappb-btn--danger" title="Delete collection">Delete</button>
+    </div>
+
+    <form id="addItemForm" class="cappb-add-item-form">
+      <textarea id="addItemText" class="cappb-field cappb-textarea" placeholder="Add a message to this collection" rows="2"></textarea>
+      <button type="submit" class="cappb-btn cappb-btn--primary cappb-add-item-btn">Add</button>
+    </form>
+
+    <ul id="itemsList" class="cappb-items-list"></ul>
+  </section>
+
+  <script src="../../services/storage.js"></script>
+  <script src="../../common/common.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

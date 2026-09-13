@@ -1,0 +1,170 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--cappb-font-ui);
+  color: var(--cappb-ink);
+  background: var(--cappb-board);
+}
+
+.cappb-toolbar {
+  padding: 16px 28px;
+  border-bottom: 1px solid var(--cappb-line);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.cappb-brand-title { font-size: 17px; margin: 0; }
+
+.cappb-toolbar-actions { display: flex; gap: 10px; align-items: center; }
+
+.cappb-search-input { width: 260px; background: #fff; }
+
+.cappb-board {
+  display: flex;
+  align-items: flex-start;
+  gap: 22px;
+  padding: 28px;
+  overflow-x: auto;
+  min-height: calc(100vh - 66px);
+  background-image:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 26px),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 26px);
+}
+
+.cappb-column {
+  background: rgba(0, 0, 0, 0.12);
+  border-radius: var(--cappb-radius-xl);
+  padding: 18px 14px 14px;
+  width: 270px;
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.cappb-tape {
+  position: absolute;
+  top: -10px;
+  left: 24px;
+  width: 70px;
+  height: 20px;
+  background: var(--cappb-group-color, var(--cappb-sage));
+  opacity: 0.85;
+  transform: rotate(-3deg);
+  border-radius: var(--cappb-radius-sm);
+  box-shadow: var(--cappb-shadow-tape);
+}
+
+.cappb-column-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.cappb-group-name {
+  background: none;
+  border: none;
+  color: var(--cappb-paper);
+  font-weight: 700;
+  font-size: 15px;
+  font-family: var(--cappb-font-ui);
+  padding: 4px 2px;
+  width: 100%;
+  border-bottom: 1px solid transparent;
+}
+.cappb-group-name:focus { outline: none; border-bottom: 1px solid rgba(255, 255, 255, 0.4); }
+
+.cappb-column-menu { display: flex; gap: 4px; flex-shrink: 0; }
+.cappb-column-menu .cappb-btn--icon { color: rgba(255, 255, 255, 0.65); font-size: 11px; }
+.cappb-column-menu .cappb-btn--icon:hover { background: rgba(255, 255, 255, 0.12); color: #fff; }
+.cappb-color-btn { color: var(--cappb-group-color, var(--cappb-sage)); }
+
+.cappb-color-swatches { display: flex; gap: 6px; margin-bottom: 10px; }
+.cappb-swatch {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--cappb-radius-circle);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+.cappb-swatch:hover { border-color: #fff; }
+
+.cappb-add-note-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.cappb-note-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--cappb-paper);
+  resize: vertical;
+}
+.cappb-note-input::placeholder { color: rgba(247, 243, 232, 0.5); }
+.cappb-note-input:focus { outline: 1px solid rgba(255, 255, 255, 0.4); }
+
+.cappb-add-note-btn {
+  align-self: flex-end;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--cappb-paper);
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.cappb-add-note-btn:hover { background: rgba(255, 255, 255, 0.25); }
+
+.cappb-notes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cappb-note {
+  border-radius: var(--cappb-radius-note);
+  padding: 12px 12px 10px;
+  box-shadow: var(--cappb-shadow-card);
+  position: relative;
+  transform: rotate(var(--cappb-tilt, -0.6deg));
+  cursor: grab;
+}
+.cappb-note--dragging {
+  opacity: 0.4;
+  cursor: grabbing;
+}
+.cappb-note:nth-child(3n+1) { --cappb-tilt: 0.8deg; }
+.cappb-note:nth-child(3n+2) { --cappb-tilt: -1deg; }
+.cappb-note:nth-child(3n) { --cappb-tilt: 0.4deg; }
+
+.cappb-note::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 10px;
+  height: 10px;
+  border-radius: var(--cappb-radius-circle);
+  background: var(--cappb-brick);
+  box-shadow: var(--cappb-shadow-pin);
+}
+
+.cappb-note-move {
+  font-size: 10.5px;
+  font-family: var(--cappb-font-ui);
+  border: 1px solid var(--cappb-line);
+  border-radius: var(--cappb-radius-sm);
+  background: var(--cappb-paper-2);
+  color: var(--cappb-ink);
+  padding: 2px 4px;
+  max-width: 90px;
+}
+
+.cappb-empty-column {
+  color: rgba(247, 243, 232, 0.5);
+  font-size: 12px;
+  padding: 8px 2px;
+  font-style: italic;
+}

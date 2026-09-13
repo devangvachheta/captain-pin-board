@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Captain Pin Board</title>
+<link rel="stylesheet" href="../../common/common.css" />
+<link rel="stylesheet" href="board.css" />
+</head>
+<body>
+  <header class="cappb-header cappb-toolbar">
+    <div class="cappb-brand">
+      <span class="cappb-pin-dot"></span>
+      <h1 class="cappb-brand-name cappb-brand-title">Captain Pin Board</h1>
+    </div>
+    <div class="cappb-toolbar-actions">
+      <input id="searchInput" class="cappb-field cappb-search-input" type="text" placeholder="Search pinned messages" />
+      <button id="addTopicBtn" class="cappb-btn cappb-btn--primary">New topic</button>
+    </div>
+  </header>
+
+  <main id="board" class="cappb-board"></main>
+
+  <template id="columnTemplate">
+    <section class="cappb-column">
+      <div class="cappb-tape"></div>
+      <div class="cappb-column-head">
+        <input class="cappb-group-name" type="text" />
+        <div class="cappb-column-menu">
+          <button class="cappb-btn cappb-btn--icon cappb-color-btn" title="Change color">Color</button>
+          <button class="cappb-btn cappb-btn--icon cappb-btn--danger cappb-delete-group-btn" title="Delete topic">Delete</button>
+        </div>
+      </div>
+      <div class="cappb-color-swatches cappb-hidden"></div>
+      <form class="cappb-add-note-form">
+        <textarea class="cappb-field cappb-note-input" placeholder="Add a message to pin" rows="2"></textarea>
+        <button type="submit" class="cappb-btn cappb-add-note-btn">Pin</button>
+      </form>
+      <div class="cappb-notes"></div>
+    </section>
+  </template>
+
+  <template id="noteTemplate">
+    <article class="cappb-note cappb-pin-card">
+      <p class="cappb-note-text cappb-pin-text" contenteditable="false" spellcheck="false" title="Click to edit"></p>
+      <div class="cappb-pin-footer">
+        <span class="cappb-note-date"></span>
+        <span class="cappb-pin-actions">
+          <button class="cappb-btn cappb-btn--icon cappb-note-view">View</button>
+          <button class="cappb-btn cappb-btn--icon cappb-note-copy">Copy</button>
+          <button class="cappb-btn cappb-btn--icon cappb-note-edit">Edit</button>
+          <button class="cappb-btn cappb-btn--icon cappb-btn--danger cappb-note-delete">Delete</button>
+          <select class="cappb-note-move" title="Move to another topic"></select>
+        </span>
+      </div>
+    </article>
+  </template>
+
+  <script src="../../services/storage.js"></script>
+  <script src="../../common/common.js"></script>
+  <script src="board.js"></script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+/* Shared tokens and reusable components for Captain Pin Board.
+   Page specific files (popup.css, board.css) only hold layout that is
+   unique to that page; anything reused lives here. Every color, radius
+   and shadow is defined once below and referenced with var() elsewhere,
+   so the whole look can be restyled from this one file. */
+
+:root {
+  --cappb-ink: #2b241c;
+  --cappb-paper: #f7f3e8;
+  --cappb-paper-2: #f1ecdd;
+  --cappb-board: #4a3527;
+  --cappb-toolbar: #ede7da;
+  --cappb-brick: #b5533c;
+  --cappb-brick-hover: #a24b36;
+  --cappb-sage: #7c9473;
+  --cappb-muted: #7a7266;
+  --cappb-line: #ddd4c2;
+  --cappb-font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --cappb-font-note: "Segoe Print", "Bradley Hand", "Comic Sans MS", cursive;
+
+  /* Border radius scale, used everywhere instead of one off numbers */
+  --cappb-radius-sm: 4px;
+  --cappb-radius-md: 6px;
+  --cappb-radius-lg: 8px;
+  --cappb-radius-xl: 10px;
+  --cappb-radius-note: 3px;
+  --cappb-radius-circle: 50%;
+
+  /* Shadow scale, used everywhere instead of one off numbers */
+  --cappb-shadow-card: 0 3px 8px rgba(0, 0, 0, 0.35);
+  --cappb-shadow-tape: 0 2px 4px rgba(0, 0, 0, 0.25);
+  --cappb-shadow-pin: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --cappb-ring-brick: 0 0 0 3px rgba(181, 83, 60, 0.25);
+
+  /* Note text max height before it scrolls instead of growing forever */
+  --cappb-note-max-height: 210px;
+}
+
+.cappb-hidden { display: none !important; }
+
+/* Header bar shared by the popup and the full board page. Always the
+   dark board color with paper colored text, so contrast stays correct
+   no matter which page it sits on. */
+.cappb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--cappb-board);
+  background-image: repeating-linear-gradient(
+    115deg, rgba(0, 0, 0, 0.08) 0px, rgba(0, 0, 0, 0.08) 2px, transparent 2px, transparent 10px
+  );
+}
+
+.cappb-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cappb-pin-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--cappb-radius-circle);
+  background: var(--cappb-brick);
+  box-shadow: var(--cappb-ring-brick);
+  flex-shrink: 0;
+}
+
+.cappb-brand-name {
+  font-weight: 700;
+  color: var(--cappb-paper);
+  margin: 0;
+}
+
+/* Base text field look, reused for inputs, textareas and selects. */
+.cappb-field {
+  font-family: var(--cappb-font-ui);
+  font-size: 13px;
+  padding: 8px 10px;
+  border: 1px solid var(--cappb-line);
+  border-radius: var(--cappb-radius-lg);
+  background: var(--cappb-paper);
+  color: var(--cappb-ink);
+}
+.cappb-field:focus {
+  outline: 2px solid var(--cappb-sage);
+  outline-offset: 1px;
+}
+
+/* Button family: one reset, plus modifier classes for each look used
+   across the popup and the board. */
+.cappb-btn {
+  font-family: var(--cappb-font-ui);
+  border: none;
+  border-radius: var(--cappb-radius-lg);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.cappb-btn--primary {
+  background: var(--cappb-brick);
+  color: var(--cappb-paper);
+  padding: 9px 14px;
+  font-size: 13px;
+}
+.cappb-btn--primary:hover { background: var(--cappb-brick-hover); }
+
+.cappb-btn--ghost {
+  border: 1px solid var(--cappb-line);
+  background: var(--cappb-paper);
+  color: var(--cappb-ink);
+  padding: 7px 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.cappb-btn--ghost:hover { background: var(--cappb-paper-2); }
+
+.cappb-btn--icon {
+  background: none;
+  color: var(--cappb-muted);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: var(--cappb-radius-md);
+}
+.cappb-btn--icon:hover { background: rgba(0, 0, 0, 0.08); color: var(--cappb-ink); }
+
+.cappb-btn--danger:hover { background: rgba(181, 83, 60, 0.15); color: var(--cappb-brick); }
+
+/* Empty state text, reused wherever a list has nothing pinned yet. */
+.cappb-empty-hint {
+  font-size: 12px;
+  color: var(--cappb-muted);
+  padding: 8px 2px;
+  font-style: italic;
+  text-align: center;
+}
+
+/* Pinned message card, reused by the popup item list and the board notes. */
+.cappb-pin-card {
+  background: var(--cappb-paper);
+  border-left: 4px solid var(--cappb-sage);
+}
+
+/* Long messages scroll inside a fixed height instead of stretching the
+   whole page. The View button below toggles the --cappb-pin-text--expanded
+   modifier to show the full message without a limit when needed. */
+.cappb-pin-text {
+  font-family: var(--cappb-font-note);
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0 0 6px;
+  cursor: text;
+  border-radius: var(--cappb-radius-md);
+  padding: 2px 3px;
+  max-height: var(--cappb-note-max-height);
+  overflow-y: auto;
+}
+.cappb-pin-text:hover { background: rgba(0, 0, 0, 0.03); }
+.cappb-pin-text[contenteditable="true"] {
+  background: #fff;
+  outline: 1px solid var(--cappb-sage);
+}
+.cappb-pin-text--expanded { max-height: none; overflow-y: visible; }
+
+.cappb-pin-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  row-gap: 4px;
+  gap: 6px;
+  font-size: 10.5px;
+  color: var(--cappb-muted);
+}
+
+.cappb-pin-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
