@@ -4,6 +4,9 @@ const groupSelect = document.getElementById("groupSelect");
 const saveBtn = document.getElementById("saveBtn");
 const statusMsg = document.getElementById("statusMsg");
 const openBoard = document.getElementById("openBoard");
+const captureAreaBtn = document.getElementById("captureAreaBtn");
+const pasteBtn = document.getElementById("pasteBtn");
+const collectionsCount = document.getElementById("collectionsCount");
 
 const homeView = document.getElementById("homeView");
 const detailView = document.getElementById("detailView");
@@ -40,6 +43,7 @@ async function populateGroupSelect(selectId) {
 async function renderCollections() {
   const data = await getData();
   collectionsList.innerHTML = "";
+  collectionsCount.textContent = data.groups.length;
 
   if (data.groups.length === 0) {
     collectionsList.innerHTML = '<li class="cappb-empty-hint">No collections yet, create one above.</li>';
@@ -56,7 +60,11 @@ async function renderCollections() {
         <div class="cappb-collection-name"></div>
         <div class="cappb-collection-count"></div>
       </span>
-      <span class="cappb-collection-chevron">&gt;</span>
+      <span class="cappb-collection-chevron">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
     `;
     li.querySelector(".cappb-collection-name").textContent = group.name;
     li.querySelector(".cappb-collection-count").textContent =
@@ -102,6 +110,39 @@ async function renderDetail() {
     const li = document.createElement("li");
     li.className = "cappb-item-row cappb-pin-card";
     li.style.borderLeftColor = group.color;
+
+    if (note.type === "image") {
+      li.innerHTML = `
+        <img class="cappb-item-image cappb-pin-image" alt="Pinned screenshot" />
+        <div class="cappb-pin-footer">
+          <span></span>
+          <span class="cappb-pin-actions">
+            <button class="cappb-btn cappb-btn--icon cappb-view-item">View</button>
+            <button class="cappb-btn cappb-btn--icon cappb-copy-item">Copy</button>
+            <button class="cappb-btn cappb-btn--icon cappb-download-item">Download</button>
+            <button class="cappb-btn cappb-btn--icon cappb-btn--danger cappb-delete-item">Delete</button>
+          </span>
+        </div>
+      `;
+      const imgEl = li.querySelector(".cappb-item-image");
+      imgEl.src = note.imageData;
+      li.querySelector(".cappb-pin-footer span").textContent = cappbFormatDate(note.createdAt);
+
+      cappbAttachCopy(li.querySelector(".cappb-copy-item"), () => note.imageData, "image");
+      cappbAttachView(li.querySelector(".cappb-view-item"), () => note.imageData, "image");
+      cappbAttachDownload(li.querySelector(".cappb-download-item"), () => note.imageData);
+      imgEl.addEventListener("click", () => cappbShowImageModal(note.imageData));
+
+      li.querySelector(".cappb-delete-item").addEventListener("click", async () => {
+        if (!confirm("Delete this pinned image? This cannot be undone.")) return;
+        await deleteNote(note.id);
+        await renderDetail();
+      });
+
+      itemsList.appendChild(li);
+      return;
+    }
+
     li.innerHTML = `
       <p class="cappb-item-text cappb-pin-text" contenteditable="false" spellcheck="false" title="Click to edit"></p>
       <div class="cappb-pin-footer">
@@ -125,9 +166,10 @@ async function renderDetail() {
     });
 
     cappbAttachCopy(li.querySelector(".cappb-copy-item"), () => textEl.textContent);
-    cappbAttachExpand(li.querySelector(".cappb-view-item"), textEl);
+    cappbAttachView(li.querySelector(".cappb-view-item"), () => textEl.textContent);
 
     li.querySelector(".cappb-delete-item").addEventListener("click", async () => {
+      if (!confirm("Delete this pinned message? This cannot be undone.")) return;
       await deleteNote(note.id);
       await renderDetail();
     });
@@ -185,27 +227,60 @@ newGroupName.addEventListener("keydown", (e) => {
   if (e.key === "Enter") createGroupBtn.click();
 });
 
+// Shows a status message and, when a duration is given, hides it again
+// afterward so it never sits there as blank reserved space.
+function cappbShowStatus(text, color, duration) {
+  statusMsg.textContent = text;
+  statusMsg.style.color = color;
+  statusMsg.classList.remove("cappb-hidden");
+  if (duration) {
+    setTimeout(() => {
+      statusMsg.classList.add("cappb-hidden");
+      statusMsg.textContent = "";
+    }, duration);
+  }
+}
+
 // Quick pin
 saveBtn.addEventListener("click", async () => {
   const text = msgText.value.trim();
   if (!text) {
-    statusMsg.textContent = "Write or paste a message first.";
-    statusMsg.style.color = "#b5533c";
+    cappbShowStatus("Write or paste a message first.", "#b5533c", 2000);
     return;
   }
   const groupId = groupSelect.value;
   await addNote(groupId, text);
   chrome.storage.local.set({ lastUsedGroup: groupId });
   msgText.value = "";
-  statusMsg.textContent = "Pinned";
-  statusMsg.style.color = "#7c9473";
+  cappbShowStatus("Pinned", "#7c9473", 1800);
   await renderCollections();
   if (currentGroupId === groupId) await renderDetail();
-  setTimeout(() => (statusMsg.textContent = ""), 1800);
 });
 
 openBoard.addEventListener("click", () => {
   chrome.tabs.create({ url: chrome.runtime.getURL("src/pages/board/board.html") });
+});
+
+captureAreaBtn.addEventListener("click", async () => {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  try {
+    await chrome.runtime.sendMessage({ type: "cappb-start-capture", tabId: tab ? tab.id : null });
+  } catch (e) {
+    // Background may not have a listener ready yet on a very first run, ignore.
+  }
+  window.close();
+});
+
+pasteBtn.addEventListener("click", async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    if (text) {
+      msgText.value = text;
+      msgText.focus();
+    }
+  } catch (e) {
+    cappbShowStatus("Could not read clipboard, paste manually.", "#b5533c", 2000);
+  }
 });
 
 // Init

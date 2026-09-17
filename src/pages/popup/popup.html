@@ -18,19 +18,31 @@
   <!-- View 1: quick pin plus the collections list -->
   <section id="homeView">
     <div class="cappb-quick-pin">
-      <label class="cappb-field-label" for="msgText">Message</label>
-      <textarea id="msgText" class="cappb-field cappb-textarea" placeholder="Paste or type the message you want to keep" rows="3"></textarea>
+      <div class="cappb-message-head">
+        <span class="cappb-message-label">Message <span class="cappb-message-sublabel">or note</span></span>
+        <button id="pasteBtn" class="cappb-paste-btn" type="button">Paste</button>
+      </div>
+      <div class="cappb-textarea-wrap">
+        <textarea id="msgText" class="cappb-field cappb-textarea" placeholder="Paste or type the message you want to keep" rows="4"></textarea>
+        <button id="captureAreaBtn" class="cappb-capture-inline" type="button">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 7.5C4 6.67157 4.67157 6 5.5 6H7.5L8.5 4.5H15.5L16.5 6H18.5C19.3284 6 20 6.67157 20 7.5V17.5C20 18.3284 19.3284 19 18.5 19H5.5C4.67157 19 4 18.3284 4 17.5V7.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            <circle cx="12" cy="12.5" r="3.25" stroke="currentColor" stroke-width="1.6"/>
+          </svg>
+          Capture
+        </button>
+      </div>
 
       <label class="cappb-field-label" for="groupSelect">Save to collection</label>
       <div class="cappb-row">
-        <select id="groupSelect" class="cappb-field"></select>
+        <select id="groupSelect" class="cappb-field cappb-select"></select>
         <button id="saveBtn" class="cappb-btn cappb-btn--primary cappb-save-btn">Pin</button>
       </div>
-      <p id="statusMsg" class="cappb-status"></p>
+      <p id="statusMsg" class="cappb-status cappb-hidden"></p>
     </div>
 
     <div class="cappb-collections-head">
-      <h2>Your collections</h2>
+      <h2>Your collections <span id="collectionsCount" class="cappb-count-badge"></span></h2>
       <button id="newGroupBtn" class="cappb-btn cappb-btn--ghost cappb-btn--sm">New</button>
     </div>
     <div id="newGroupRow" class="cappb-row cappb-hidden cappb-inline-new">

@@ -55,6 +55,22 @@
     </article>
   </template>
 
+  <template id="imageNoteTemplate">
+    <article class="cappb-note cappb-pin-card">
+      <img class="cappb-note-image cappb-pin-image" alt="Pinned screenshot" />
+      <div class="cappb-pin-footer">
+        <span class="cappb-note-date"></span>
+        <span class="cappb-pin-actions">
+          <button class="cappb-btn cappb-btn--icon cappb-note-view">View</button>
+          <button class="cappb-btn cappb-btn--icon cappb-note-copy">Copy</button>
+          <button class="cappb-btn cappb-btn--icon cappb-note-download">Download</button>
+          <button class="cappb-btn cappb-btn--icon cappb-btn--danger cappb-note-delete">Delete</button>
+          <select class="cappb-note-move" title="Move to another topic"></select>
+        </span>
+      </div>
+    </article>
+  </template>
+
   <script src="../../services/storage.js"></script>
   <script src="../../common/common.js"></script>
   <script src="board.js"></script>

@@ -64,6 +64,25 @@ async function addNote(groupId, text) {
   return note;
 }
 
+// Saves a captured screenshot area as an image note. imageData is a
+// data URL (base64 PNG). Image notes have no text, so they are skipped
+// by text search but otherwise behave like any other pinned note.
+async function addImageNote(groupId, imageData) {
+  const data = await getData();
+  const note = {
+    id: cappbUid(),
+    groupId,
+    type: "image",
+    imageData,
+    text: "",
+    createdAt: Date.now(),
+    order: -Date.now()
+  };
+  data.notes.unshift(note);
+  await setData(data);
+  return note;
+}
+
 async function deleteNote(noteId) {
   const data = await getData();
   data.notes = data.notes.filter((n) => n.id !== noteId);

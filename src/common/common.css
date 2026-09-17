@@ -143,8 +143,8 @@
 }
 
 /* Long messages scroll inside a fixed height instead of stretching the
-   whole page. The View button below toggles the --cappb-pin-text--expanded
-   modifier to show the full message without a limit when needed. */
+   whole page. The View button opens the full text in a modal instead
+   of growing the card, so very long notes never break the layout. */
 .cappb-pin-text {
   font-family: var(--cappb-font-note);
   font-size: 14px;
@@ -163,7 +163,6 @@
   background: #fff;
   outline: 1px solid var(--cappb-sage);
 }
-.cappb-pin-text--expanded { max-height: none; overflow-y: visible; }
 
 .cappb-pin-footer {
   display: flex;
@@ -181,4 +180,65 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 4px;
+}
+
+/* Full text modal, opened by the View button so a long message never
+   has to stretch its card and break the surrounding layout. */
+.cappb-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.cappb-modal {
+  background: var(--cappb-paper);
+  border-radius: var(--cappb-radius-lg);
+  box-shadow: var(--cappb-shadow-card);
+  width: 100%;
+  max-width: 480px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 20px;
+  position: relative;
+}
+
+.cappb-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.cappb-modal-text {
+  font-family: var(--cappb-font-note);
+  font-size: 15px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 24px 0 0;
+}
+
+.cappb-modal-image {
+  display: block;
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: var(--cappb-radius-md);
+  margin: 24px 0 0;
+}
+
+/* Thumbnail for an image note inside its card, reused by the popup
+   item list and the board notes. */
+.cappb-pin-image {
+  display: block;
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: var(--cappb-radius-md);
+  margin: 0 0 8px;
+  cursor: pointer;
 }

@@ -15,12 +15,31 @@ function cappbPlaceCaretAtEnd(el) {
   sel.addRange(range);
 }
 
-// Wires a "Copy" button to copy the given text and briefly confirm it worked.
-function cappbAttachCopy(copyBtn, getText) {
+// Wires a "Download" button to save an image note as a PNG file on
+// disk, using a plain anchor tag so no extra permission is needed.
+function cappbAttachDownload(downloadBtn, getDataUrl) {
+  downloadBtn.addEventListener("click", () => {
+    const a = document.createElement("a");
+    a.href = getDataUrl();
+    a.download = `captain-pin-board-${Date.now()}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+}
+
+// Wires a "Copy" button to copy text, or an image when kind is "image",
+// and briefly confirms it worked.
+function cappbAttachCopy(copyBtn, getContent, kind) {
   const originalLabel = copyBtn.textContent;
   copyBtn.addEventListener("click", async () => {
     try {
-      await navigator.clipboard.writeText(getText());
+      if (kind === "image") {
+        const blob = await (await fetch(getContent())).blob();
+        await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })]);
+      } else {
+        await navigator.clipboard.writeText(getContent());
+      }
       copyBtn.textContent = "Copied";
     } catch (e) {
       copyBtn.textContent = "Could not copy";
@@ -29,12 +48,61 @@ function cappbAttachCopy(copyBtn, getText) {
   });
 }
 
-// Wires a "View" button to expand a message past its normal max height,
-// and collapse it back to a scrollable card on a second click.
-function cappbAttachExpand(viewBtn, textEl) {
+// Shows the full text of a note in a centered modal, so a very long
+// message never has to grow inside its card and break the surrounding
+// layout. Closes on the X button, clicking the backdrop, or Escape.
+function cappbShowTextModal(text) {
+  const textEl = document.createElement("p");
+  textEl.className = "cappb-modal-text";
+  textEl.textContent = text;
+  cappbOpenModal(textEl);
+}
+
+// Shows a captured image at full size in the same modal shell.
+function cappbShowImageModal(dataUrl) {
+  const img = document.createElement("img");
+  img.className = "cappb-modal-image";
+  img.src = dataUrl;
+  cappbOpenModal(img);
+}
+
+function cappbOpenModal(contentEl) {
+  const backdrop = document.createElement("div");
+  backdrop.className = "cappb-modal-backdrop";
+
+  const modal = document.createElement("div");
+  modal.className = "cappb-modal";
+
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "cappb-btn cappb-btn--icon cappb-modal-close";
+  closeBtn.textContent = "Close";
+
+  modal.appendChild(closeBtn);
+  modal.appendChild(contentEl);
+  backdrop.appendChild(modal);
+  document.body.appendChild(backdrop);
+
+  function close() {
+    backdrop.remove();
+    document.removeEventListener("keydown", onKeydown);
+  }
+  function onKeydown(e) {
+    if (e.key === "Escape") close();
+  }
+
+  closeBtn.addEventListener("click", close);
+  backdrop.addEventListener("click", (e) => {
+    if (e.target === backdrop) close();
+  });
+  document.addEventListener("keydown", onKeydown);
+}
+
+// Wires a "View" button to open the full message (or image, when kind
+// is "image") in a modal, reading current content through getContent.
+function cappbAttachView(viewBtn, getContent, kind) {
   viewBtn.addEventListener("click", () => {
-    const expanded = textEl.classList.toggle("cappb-pin-text--expanded");
-    viewBtn.textContent = expanded ? "Collapse" : "View";
+    if (kind === "image") cappbShowImageModal(getContent());
+    else cappbShowTextModal(getContent());
   });
 }
 

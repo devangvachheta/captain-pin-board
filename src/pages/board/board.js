@@ -1,6 +1,7 @@
 const boardEl = document.getElementById("board");
 const columnTemplate = document.getElementById("columnTemplate");
 const noteTemplate = document.getElementById("noteTemplate");
+const imageNoteTemplate = document.getElementById("imageNoteTemplate");
 const searchInput = document.getElementById("searchInput");
 const addTopicBtn = document.getElementById("addTopicBtn");
 
@@ -113,15 +114,25 @@ async function render() {
     });
 
     groupNotes.forEach((note) => {
-      const noteEl = noteTemplate.content.firstElementChild.cloneNode(true);
+      const isImage = note.type === "image";
+      const template = isImage ? imageNoteTemplate : noteTemplate;
+      const noteEl = template.content.firstElementChild.cloneNode(true);
       noteEl.draggable = true;
       noteEl.dataset.noteId = note.id;
-      const textEl = noteEl.querySelector(".cappb-note-text");
-      textEl.textContent = note.text;
+
+      let textEl = null;
+      if (isImage) {
+        const imgEl = noteEl.querySelector(".cappb-note-image");
+        imgEl.src = note.imageData;
+        imgEl.addEventListener("click", () => cappbShowImageModal(note.imageData));
+      } else {
+        textEl = noteEl.querySelector(".cappb-note-text");
+        textEl.textContent = note.text;
+      }
       noteEl.querySelector(".cappb-note-date").textContent = cappbFormatDate(note.createdAt);
 
       noteEl.addEventListener("dragstart", (e) => {
-        if (textEl.getAttribute("contenteditable") === "true") {
+        if (textEl && textEl.getAttribute("contenteditable") === "true") {
           e.preventDefault();
           return;
         }
@@ -142,14 +153,19 @@ async function render() {
         await render();
       });
 
-      const editBtn = noteEl.querySelector(".cappb-note-edit");
-      cappbAttachInlineEdit(textEl, editBtn, note.text, async (newText) => {
-        await editNote(note.id, newText);
-        await render();
-      });
-
-      cappbAttachCopy(noteEl.querySelector(".cappb-note-copy"), () => textEl.textContent);
-      cappbAttachExpand(noteEl.querySelector(".cappb-note-view"), textEl);
+      if (isImage) {
+        cappbAttachCopy(noteEl.querySelector(".cappb-note-copy"), () => note.imageData, "image");
+        cappbAttachView(noteEl.querySelector(".cappb-note-view"), () => note.imageData, "image");
+        cappbAttachDownload(noteEl.querySelector(".cappb-note-download"), () => note.imageData);
+      } else {
+        const editBtn = noteEl.querySelector(".cappb-note-edit");
+        cappbAttachInlineEdit(textEl, editBtn, note.text, async (newText) => {
+          await editNote(note.id, newText);
+          await render();
+        });
+        cappbAttachCopy(noteEl.querySelector(".cappb-note-copy"), () => textEl.textContent);
+        cappbAttachView(noteEl.querySelector(".cappb-note-view"), () => textEl.textContent);
+      }
 
       const moveSelect = noteEl.querySelector(".cappb-note-move");
       cachedData.groups.forEach((g) => {
@@ -165,6 +181,7 @@ async function render() {
       });
 
       noteEl.querySelector(".cappb-note-delete").addEventListener("click", async () => {
+        if (!confirm(`Delete this pinned ${isImage ? "image" : "message"}? This cannot be undone.`)) return;
         await deleteNote(note.id);
         await render();
       });
