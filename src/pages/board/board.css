@@ -168,3 +168,37 @@ body {
   padding: 8px 2px;
   font-style: italic;
 }
+
+.cappb-tagbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 28px;
+  background: rgba(0, 0, 0, 0.18);
+}
+.cappb-tagbar-label {
+  color: rgba(247, 243, 232, 0.6);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-right: 4px;
+}
+.cappb-tagbar-chip {
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--cappb-paper);
+  font-family: var(--cappb-font-ui);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+.cappb-tagbar-chip:hover { background: rgba(255, 255, 255, 0.22); }
+.cappb-tagbar-chip--on { background: var(--cappb-brick); }
+
+.cappb-import-title { margin: 0 0 8px; font-size: 18px; }
+.cappb-import-help { font-size: 13px; color: var(--cappb-muted); line-height: 1.5; }
+.cappb-import-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }

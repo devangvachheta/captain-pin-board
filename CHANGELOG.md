@@ -2,6 +2,27 @@
 
 All notable changes to Captain Pin Board are recorded here, newest first.
 
+## 1.2.0
+
+**New features**
+- Screenshot capture action bar: after you drag an area, the selection stays on screen with its size shown and a bar offers Pin, Copy, Download, and Cancel. Enter pins, Ctrl+C copies the image, Ctrl+S downloads a PNG, Esc cancels. Dragging again redraws the box. A collection list in the bar lets you pin to any collection without opening the board.
+- Draw on a screenshot before saving it: Arrow, Box, Pen, and Text tools, five colors, and Undo (Ctrl+Z). Drawings are included when you Pin, Copy, or Download, and are painted onto the final image by the background service worker so they are exact at any screen scale.
+- Quick find: press Alt+Shift+F anywhere to open a small search window. Type to filter your pins, move with the arrow keys, press Enter to copy the selected one (text or image), and the window closes. Esc closes it without copying.
+- Tags: add tags to any note or image with the "+ tag" chip, remove them with the x. Separate several tags with commas or spaces.
+- Tag filtering: the full board shows a tag bar, click a tag to filter every column. Search also understands tags, type #name to match tags only.
+- Star: the star button on a note keeps it at the top of its collection, in both the popup and the full board, and ranks it first in Quick find.
+- Export and Import: the Export button on the full board saves everything (collections, text and image pins, tags, stars) into one JSON backup file. Import restores from a backup file, Merge adds only what is missing and never creates duplicates, Replace all restores exactly the file after a confirmation. Files are checked before use: a file that is not a backup is rejected with a clear message and invalid entries inside a file are skipped.
+- Built in Guide page: explains every keyboard shortcut, the right click "Pin to" menu step by step, screenshot capture and drawing, copying text and images, tags and stars, and backup. Open it with the new Help button in the popup or on the full board. The shortcut keys it shows are the ones currently assigned, so they stay correct if you customize them.
+
+**Changed**
+- Default keyboard shortcuts are now Alt+Shift+E (open the popup), Alt+Shift+C (capture an area), Alt+Shift+O (open the full board, was Alt+Shift+B), and Alt+Shift+F (quick find). Customizable at chrome://extensions/shortcuts.
+- Screenshot capture no longer pins the moment you release the mouse. If you liked the old one step pin, press Enter right after dragging.
+
+**Notes**
+- No new permissions needed.
+- Older notes keep working, they simply have no tags and no star.
+- Chrome keeps shortcut keys you already have assigned when the extension updates, so existing users may still see Alt+Shift+B for the board. They can change it at chrome://extensions/shortcuts.
+
 ## 1.1.0
 
 **New features**

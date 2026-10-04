@@ -1,6 +1,10 @@
 // Shared data layer over chrome.storage.local
 // Data shape:
-// { groups: [{id, name, color}], notes: [{id, groupId, text, createdAt, order}] }
+// { groups: [{id, name, color}],
+//   notes: [{id, groupId, text, createdAt, order, tags?, starred?}] }
+// "tags" is an optional array of lowercase strings, "starred" is an optional
+// boolean. Older notes without these fields keep working, they simply read
+// as no tags and not starred.
 // "order" sorts notes ascending within a group. New notes get a smaller
 // (more negative) order so they land at the top, matching the old newest
 // first behavior. Dragging a note sets its order to a value between its
@@ -133,4 +137,71 @@ async function reorderNote(noteId, newGroupId, beforeNote, afterNote) {
   n.groupId = newGroupId;
   n.order = newOrder;
   await setData(data);
+}
+
+
+// ---- Tags and stars -------------------------------------------------
+
+// Cleans one tag: no leading #, lowercase, spaces become dashes, only
+// letters, numbers, dash and underscore, at most 24 characters.
+function cappbNormalizeTag(raw) {
+  return String(raw || "")
+    .trim()
+    .replace(/^#+/, "")
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^\p{L}\p{N}_-]/gu, "")
+    .slice(0, 24);
+}
+
+// Turns "work, urgent #client" into ["work", "urgent", "client"].
+function cappbParseTags(input) {
+  const out = [];
+  String(input || "").split(/[,\s]+/).forEach((part) => {
+    const tag = cappbNormalizeTag(part);
+    if (tag && !out.includes(tag)) out.push(tag);
+  });
+  return out;
+}
+
+async function setNoteTags(noteId, tags) {
+  const data = await getData();
+  const n = data.notes.find((n) => n.id === noteId);
+  if (n) n.tags = cappbParseTags((tags || []).join(" "));
+  await setData(data);
+}
+
+async function toggleStar(noteId) {
+  const data = await getData();
+  const n = data.notes.find((n) => n.id === noteId);
+  if (n) n.starred = !n.starred;
+  await setData(data);
+}
+
+// Starred notes first, then the manual drag order used on the board.
+function cappbCompareNotes(a, b) {
+  const star = (b.starred ? 1 : 0) - (a.starred ? 1 : 0);
+  return star || cappbSortKey(a) - cappbSortKey(b);
+}
+
+// All tags in use with how many notes carry each, most used first.
+function cappbCollectTags(notes) {
+  const counts = {};
+  notes.forEach((n) => (n.tags || []).forEach((t) => (counts[t] = (counts[t] || 0) + 1)));
+  return Object.keys(counts)
+    .map((tag) => ({ tag, count: counts[tag] }))
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+// Shared search rule for the board and quick search. A term starting
+// with # matches tags only, anything else matches the text or any tag.
+function cappbNoteMatches(note, term) {
+  const q = (term || "").trim().toLowerCase();
+  if (!q) return true;
+  const tags = note.tags || [];
+  if (q.startsWith("#")) {
+    const t = q.slice(1);
+    return !t || tags.some((tag) => tag.includes(t));
+  }
+  return (note.text || "").toLowerCase().includes(q) || tags.some((tag) => tag.includes(q));
 }

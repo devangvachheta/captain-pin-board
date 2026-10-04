@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Quick find - Captain Pin Board</title>
+<link rel="stylesheet" href="../../common/common.css" />
+<link rel="stylesheet" href="quick.css" />
+</head>
+<body class="cappb-quick-body">
+  <header class="cappb-header cappb-quick-header">
+    <span class="cappb-pin-dot"></span>
+    <input id="quickInput" class="cappb-quick-input" type="text" placeholder="Search your pins, Enter to copy" autocomplete="off" spellcheck="false" />
+  </header>
+
+  <div id="quickTags" class="cappb-quick-tags"></div>
+  <ul id="quickResults" class="cappb-quick-results"></ul>
+
+  <footer class="cappb-quick-footer">
+    <span id="quickToast" class="cappb-quick-toast"></span>
+    <span class="cappb-quick-hint">↑ ↓ select &nbsp;·&nbsp; Enter copy &nbsp;·&nbsp; Esc close &nbsp;·&nbsp; #tag filters by tag</span>
+  </footer>
+
+  <script src="../../services/storage.js"></script>
+  <script src="quick.js"></script>
+</body>
+</html>

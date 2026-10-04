@@ -99,7 +99,7 @@ async function renderDetail() {
 
   const items = data.notes
     .filter((n) => n.groupId === currentGroupId)
-    .sort((a, b) => b.createdAt - a.createdAt);
+    .sort((a, b) => (b.starred ? 1 : 0) - (a.starred ? 1 : 0) || b.createdAt - a.createdAt);
 
   if (items.length === 0) {
     itemsList.innerHTML = '<li class="cappb-empty-hint">Nothing pinned here yet.</li>';
@@ -110,13 +110,22 @@ async function renderDetail() {
     const li = document.createElement("li");
     li.className = "cappb-item-row cappb-pin-card";
     li.style.borderLeftColor = group.color;
+    if (note.starred) li.classList.add("cappb-pin-card--starred");
+
+    // Runs once the card's innerHTML below is built.
+    const wireExtras = () => {
+      cappbAttachStar(li.querySelector(".cappb-star-item"), note, renderDetail);
+      cappbAttachTags(li.querySelector(".cappb-tags"), note, { onChange: renderDetail });
+    };
 
     if (note.type === "image") {
       li.innerHTML = `
         <img class="cappb-item-image cappb-pin-image" alt="Pinned screenshot" />
+        <div class="cappb-tags"></div>
         <div class="cappb-pin-footer">
           <span></span>
           <span class="cappb-pin-actions">
+            <button class="cappb-btn cappb-btn--icon cappb-star-btn cappb-star-item"></button>
             <button class="cappb-btn cappb-btn--icon cappb-view-item">View</button>
             <button class="cappb-btn cappb-btn--icon cappb-copy-item">Copy</button>
             <button class="cappb-btn cappb-btn--icon cappb-download-item">Download</button>
@@ -124,6 +133,7 @@ async function renderDetail() {
           </span>
         </div>
       `;
+      wireExtras();
       const imgEl = li.querySelector(".cappb-item-image");
       imgEl.src = note.imageData;
       li.querySelector(".cappb-pin-footer span").textContent = cappbFormatDate(note.createdAt);
@@ -145,9 +155,11 @@ async function renderDetail() {
 
     li.innerHTML = `
       <p class="cappb-item-text cappb-pin-text" contenteditable="false" spellcheck="false" title="Click to edit"></p>
+      <div class="cappb-tags"></div>
       <div class="cappb-pin-footer">
         <span></span>
         <span class="cappb-pin-actions">
+          <button class="cappb-btn cappb-btn--icon cappb-star-btn cappb-star-item"></button>
           <button class="cappb-btn cappb-btn--icon cappb-view-item">View</button>
           <button class="cappb-btn cappb-btn--icon cappb-copy-item">Copy</button>
           <button class="cappb-btn cappb-btn--icon cappb-edit-item">Edit</button>
@@ -155,6 +167,7 @@ async function renderDetail() {
         </span>
       </div>
     `;
+    wireExtras();
     const textEl = li.querySelector(".cappb-item-text");
     textEl.textContent = note.text;
     li.querySelector(".cappb-pin-footer span").textContent = cappbFormatDate(note.createdAt);
@@ -259,6 +272,10 @@ saveBtn.addEventListener("click", async () => {
 
 openBoard.addEventListener("click", () => {
   chrome.tabs.create({ url: chrome.runtime.getURL("src/pages/board/board.html") });
+});
+
+document.getElementById("openHelp").addEventListener("click", () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("src/pages/help/help.html") });
 });
 
 captureAreaBtn.addEventListener("click", async () => {

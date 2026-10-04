@@ -242,3 +242,65 @@
   margin: 0 0 8px;
   cursor: pointer;
 }
+
+/* Star button and starred card look. */
+.cappb-pin-card { position: relative; }
+.cappb-star-btn { font-size: 15px; line-height: 1; color: var(--cappb-muted); }
+.cappb-star-btn--on { color: #c9a227; }
+.cappb-pin-card--starred { outline: 2px solid rgba(201, 162, 39, 0.75); outline-offset: -2px; }
+
+/* Tag chips on a note, and the small input that adds new ones. */
+.cappb-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  margin: 0 0 6px;
+}
+.cappb-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(0, 0, 0, 0.07);
+  color: var(--cappb-ink);
+  font-size: 10.5px;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 1px 4px 1px 7px;
+}
+.cappb-tag-label--link { cursor: pointer; }
+.cappb-tag-label--link:hover { color: var(--cappb-brick); text-decoration: underline; }
+.cappb-tag-remove {
+  border: none;
+  background: none;
+  color: var(--cappb-muted);
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  padding: 0 3px;
+}
+.cappb-tag-remove:hover { color: var(--cappb-brick); }
+.cappb-tag-add {
+  border: 1px dashed var(--cappb-line);
+  background: none;
+  color: var(--cappb-muted);
+  font-family: var(--cappb-font-ui);
+  font-size: 10.5px;
+  border-radius: 999px;
+  padding: 1px 7px;
+  cursor: pointer;
+}
+.cappb-tag-add:hover { color: var(--cappb-ink); border-color: var(--cappb-muted); }
+.cappb-tag-input {
+  font-family: var(--cappb-font-ui);
+  font-size: 11px;
+  width: 110px;
+  padding: 2px 6px;
+  border: 1px solid var(--cappb-sage);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--cappb-ink);
+}
+.cappb-tag-input:focus { outline: none; }
+
+.cappb-header-links { display: flex; align-items: center; gap: 12px; }

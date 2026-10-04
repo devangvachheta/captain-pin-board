@@ -143,3 +143,89 @@ function cappbAttachInlineEdit(textEl, editBtn, originalText, onSave) {
     if (textEl.getAttribute("contenteditable") === "true") commit();
   });
 }
+
+// Wires the star button on a note card. A starred note stays at the top
+// of its collection. onChange re-renders the surrounding list.
+function cappbAttachStar(starBtn, note, onChange) {
+  starBtn.textContent = note.starred ? "★" : "☆";
+  starBtn.classList.toggle("cappb-star-btn--on", !!note.starred);
+  starBtn.title = note.starred ? "Remove star" : "Star: keep at the top";
+  starBtn.addEventListener("click", async () => {
+    await toggleStar(note.id);
+    await onChange();
+  });
+}
+
+// Renders the tag chips for a note into container, plus a "+ tag" button
+// that turns into a small input. Options:
+//   onChange()      called after tags are saved, to re-render
+//   onTagClick(tag) optional, makes the chips clickable (used for filtering)
+function cappbAttachTags(container, note, options) {
+  const tags = note.tags || [];
+  container.innerHTML = "";
+
+  tags.forEach((tag) => {
+    const chip = document.createElement("span");
+    chip.className = "cappb-tag";
+
+    const label = document.createElement("span");
+    label.className = "cappb-tag-label";
+    label.textContent = "#" + tag;
+    if (options.onTagClick) {
+      label.classList.add("cappb-tag-label--link");
+      label.title = "Show notes tagged #" + tag;
+      label.addEventListener("click", () => options.onTagClick(tag));
+    }
+
+    const remove = document.createElement("button");
+    remove.type = "button";
+    remove.className = "cappb-tag-remove";
+    remove.textContent = "×";
+    remove.title = "Remove tag";
+    remove.addEventListener("click", async () => {
+      await setNoteTags(note.id, tags.filter((t) => t !== tag));
+      await options.onChange();
+    });
+
+    chip.appendChild(label);
+    chip.appendChild(remove);
+    container.appendChild(chip);
+  });
+
+  const addBtn = document.createElement("button");
+  addBtn.type = "button";
+  addBtn.className = "cappb-tag-add";
+  addBtn.textContent = "+ tag";
+  addBtn.addEventListener("click", () => {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.className = "cappb-tag-input";
+    input.placeholder = "tag, tag…";
+    addBtn.replaceWith(input);
+
+    // A draggable card would start a drag instead of selecting text in the input.
+    const card = container.closest("[draggable]");
+    if (card) card.draggable = false;
+    input.focus();
+
+    let done = false;
+    const finish = async (save) => {
+      if (done) return;
+      done = true;
+      if (card) card.draggable = true;
+      const added = save ? cappbParseTags(input.value) : [];
+      if (added.length) {
+        await setNoteTags(note.id, [...tags, ...added]);
+        await options.onChange();
+      } else {
+        input.replaceWith(addBtn);
+      }
+    };
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") { e.preventDefault(); finish(true); }
+      if (e.key === "Escape") { e.preventDefault(); finish(false); }
+    });
+    input.addEventListener("blur", () => finish(true));
+  });
+  container.appendChild(addBtn);
+}

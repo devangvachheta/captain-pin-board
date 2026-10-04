@@ -4,13 +4,45 @@ const noteTemplate = document.getElementById("noteTemplate");
 const imageNoteTemplate = document.getElementById("imageNoteTemplate");
 const searchInput = document.getElementById("searchInput");
 const addTopicBtn = document.getElementById("addTopicBtn");
+const tagBar = document.getElementById("tagBar");
 
 let cachedData = { groups: [], notes: [] };
 let searchTerm = "";
 
 function cappbMatchesSearch(note) {
-  if (!searchTerm) return true;
-  return note.text.toLowerCase().includes(searchTerm.toLowerCase());
+  return cappbNoteMatches(note, searchTerm);
+}
+
+// Puts "#tag" in the search box to filter by it, or clears it when that
+// tag is already the active filter.
+async function cappbToggleTagFilter(tag) {
+  const wanted = "#" + tag;
+  searchInput.value = searchInput.value.trim().toLowerCase() === wanted ? "" : wanted;
+  searchTerm = searchInput.value;
+  await render();
+}
+
+// Row of every tag in use, click one to filter the whole board by it.
+function cappbRenderTagBar() {
+  const tags = cappbCollectTags(cachedData.notes);
+  tagBar.innerHTML = "";
+  tagBar.classList.toggle("cappb-hidden", tags.length === 0);
+  if (tags.length === 0) return;
+
+  const label = document.createElement("span");
+  label.className = "cappb-tagbar-label";
+  label.textContent = "Tags";
+  tagBar.appendChild(label);
+
+  const active = searchTerm.trim().toLowerCase();
+  tags.forEach(({ tag, count }) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "cappb-tagbar-chip" + (active === "#" + tag ? " cappb-tagbar-chip--on" : "");
+    chip.textContent = `#${tag} ${count}`;
+    chip.addEventListener("click", () => cappbToggleTagFilter(tag));
+    tagBar.appendChild(chip);
+  });
 }
 
 // Given a notes container and the cursor's vertical position, finds the
@@ -34,6 +66,7 @@ function cappbGetDragAfterElement(container, y) {
 async function render() {
   cachedData = await getData();
   boardEl.innerHTML = "";
+  cappbRenderTagBar();
 
   cachedData.groups.forEach((group) => {
     const col = columnTemplate.content.firstElementChild.cloneNode(true);
@@ -90,7 +123,7 @@ async function render() {
     const groupNotes = cachedData.notes
       .filter((n) => n.groupId === group.id)
       .filter(cappbMatchesSearch)
-      .sort((a, b) => cappbSortKey(a) - cappbSortKey(b));
+      .sort(cappbCompareNotes);
 
     if (groupNotes.length === 0) {
       const empty = document.createElement("p");
@@ -119,6 +152,13 @@ async function render() {
       const noteEl = template.content.firstElementChild.cloneNode(true);
       noteEl.draggable = true;
       noteEl.dataset.noteId = note.id;
+      if (note.starred) noteEl.classList.add("cappb-pin-card--starred");
+
+      cappbAttachStar(noteEl.querySelector(".cappb-note-star"), note, render);
+      cappbAttachTags(noteEl.querySelector(".cappb-tags"), note, {
+        onChange: render,
+        onTagClick: cappbToggleTagFilter
+      });
 
       let textEl = null;
       if (isImage) {
@@ -198,6 +238,109 @@ addTopicBtn.addEventListener("click", async () => {
   if (!name || !name.trim()) return;
   await addGroup(name.trim());
   await render();
+});
+
+// ---- Export / Import ----------------------------------------------------
+
+function cappbNotify(message) {
+  alert(message);
+}
+
+document.getElementById("exportBtn").addEventListener("click", async () => {
+  const backup = await cappbBuildBackup();
+  const blob = new Blob([JSON.stringify(backup)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = cappbBackupFileName();
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+const importFile = document.getElementById("importFile");
+document.getElementById("importBtn").addEventListener("click", () => {
+  importFile.value = "";
+  importFile.click();
+});
+
+importFile.addEventListener("change", async () => {
+  const file = importFile.files[0];
+  if (!file) return;
+  let incoming;
+  try {
+    incoming = cappbParseBackup(await file.text());
+  } catch (e) {
+    cappbNotify(e.message);
+    return;
+  }
+  cappbShowImportDialog(incoming);
+});
+
+// Asks whether to merge or replace, then applies the chosen import.
+function cappbShowImportDialog(incoming) {
+  const backdrop = document.createElement("div");
+  backdrop.className = "cappb-modal-backdrop";
+  const modal = document.createElement("div");
+  modal.className = "cappb-modal";
+
+  const title = document.createElement("h2");
+  title.textContent = "Import backup";
+  title.className = "cappb-import-title";
+  const info = document.createElement("p");
+  info.textContent = `This file has ${incoming.groups.length} collection(s) and ${incoming.notes.length} pin(s).`;
+  const mergeNote = document.createElement("p");
+  mergeNote.className = "cappb-import-help";
+  mergeNote.innerHTML = "<b>Merge</b> adds what is missing and keeps everything you have now.<br><b>Replace all</b> deletes your current pins and uses only this file.";
+
+  const actions = document.createElement("div");
+  actions.className = "cappb-import-actions";
+  const close = () => backdrop.remove();
+  const mkBtn = (label, cls, handler) => {
+    const b = document.createElement("button");
+    b.className = "cappb-btn " + cls;
+    b.textContent = label;
+    b.addEventListener("click", handler);
+    actions.appendChild(b);
+    return b;
+  };
+
+  const finish = async (buildData, successMessage) => {
+    try {
+      const current = await getData();
+      const result = buildData(current);
+      await cappbSaveStrict(result.data);
+      close();
+      await render();
+      cappbNotify(successMessage(result));
+    } catch (e) {
+      close();
+      cappbNotify("Import failed, nothing was changed. " + e.message);
+    }
+  };
+
+  mkBtn("Merge", "cappb-btn--primary", () =>
+    finish(
+      (cur) => cappbMergeBackup(cur, incoming),
+      (r) => `Added ${r.addedNotes} pin(s) and ${r.addedGroups} collection(s).`
+    )
+  );
+  mkBtn("Replace all", "cappb-btn--ghost", () => {
+    if (!confirm("This deletes all your current pins and cannot be undone. Continue?")) return;
+    finish(
+      () => ({ data: cappbReplaceWithBackup(incoming) }),
+      () => "Backup restored."
+    );
+  });
+  mkBtn("Cancel", "cappb-btn--ghost", close);
+
+  modal.append(title, info, mergeNote, actions);
+  backdrop.appendChild(modal);
+  backdrop.addEventListener("click", (e) => { if (e.target === backdrop) close(); });
+  document.body.appendChild(backdrop);
+}
+
+document.getElementById("helpBtn").addEventListener("click", () => {
+  chrome.tabs.create({ url: chrome.runtime.getURL("src/pages/help/help.html") });
 });
 
 searchInput.addEventListener("input", async () => {

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Help - Captain Pin Board</title>
+<link rel="stylesheet" href="../../common/common.css" />
+<link rel="stylesheet" href="help.css" />
+</head>
+<body class="cappb-help-body">
+  <header class="cappb-header cappb-help-header">
+    <div class="cappb-brand">
+      <span class="cappb-pin-dot"></span>
+      <h1 class="cappb-brand-name">Captain Pin Board: Guide</h1>
+    </div>
+  </header>
+
+  <main class="cappb-help-doc">
+    <nav class="cappb-help-toc">
+      <a href="#shortcuts">Keyboard shortcuts</a>
+      <a href="#rightclick">Right click menu</a>
+      <a href="#capture">Screenshot capture</a>
+      <a href="#copying">Copying text and images</a>
+      <a href="#organize">Tags and stars</a>
+      <a href="#backup">Backup and restore</a>
+      <a href="#tips">Tips and fixes</a>
+    </nav>
+
+    <p class="cappb-help-lead">Pin any message or screenshot into a collection, then find and copy it again in seconds. Everything is stored on this device only.</p>
+
+    <section id="shortcuts">
+      <h2>Keyboard shortcuts</h2>
+      <p>These work on any website, you do not need to open the popup first.</p>
+      <table>
+        <tr><th>Shortcut</th><th>What it does</th></tr>
+        <tr><td><kbd data-command="_execute_action">Alt+Shift+E</kbd></td><td><b>Open the popup</b>, the same as clicking the extension icon. Select text on the page first and it is filled into the message box.</td></tr>
+        <tr><td><kbd data-command="open_full_board">Alt+Shift+O</kbd></td><td><b>Open the full board</b>, the corkboard with one column per collection.</td></tr>
+        <tr><td><kbd data-command="capture_area">Alt+Shift+C</kbd></td><td><b>Capture an area.</b> Drag a box over any part of the page. An action bar then lets you pin, copy, or download the screenshot (see Screenshot capture below).</td></tr>
+        <tr><td><kbd data-command="quick_search">Alt+Shift+F</kbd></td><td><b>Quick find.</b> Opens a small search window to find a pin and copy it (see below).</td></tr>
+      </table>
+      <p class="cappb-help-note">The keys shown above are the ones currently assigned. To change them, <button id="shortcutsBtn" class="cappb-help-link" type="button">open the shortcut settings</button>. If a shortcut does nothing, another extension may be using the same keys, set a different one there.</p>
+
+      <h3>Inside Quick find</h3>
+      <table>
+        <tr><th>Key</th><th>Action</th></tr>
+        <tr><td><kbd>Type</kbd></td><td>Filters your pins by text and tags as you type.</td></tr>
+        <tr><td><kbd>#tag</kbd></td><td>Typing <code>#promo</code> shows only pins tagged promo. You can also click a tag chip under the search box.</td></tr>
+        <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>Move the highlight. Starred pins are listed first, then newest.</td></tr>
+        <tr><td><kbd>Enter</kbd></td><td>Copies the highlighted pin (text or image) and closes the window. You can also just click a pin.</td></tr>
+        <tr><td><kbd>Esc</kbd></td><td>Closes the window without copying.</td></tr>
+      </table>
+    </section>
+
+    <section id="rightclick">
+      <h2>Right click menu</h2>
+      <p>The fastest way to save text from a web page.</p>
+      <ol>
+        <li><b>Select the text</b> you want to keep on any web page.</li>
+        <li><b>Right click</b> on the selection. You will see an option named <b>Pin "your selected text" to…</b></li>
+        <li>Hover over it. A list opens with <b>every collection</b> you have, for example Marketing, Scripts, Personal.</li>
+        <li><b>Click a collection</b>. The text is saved there instantly and the extension icon briefly shows <b>OK</b>.</li>
+      </ol>
+      <h3>What each item in the menu means</h3>
+      <table>
+        <tr><th>Menu item</th><th>What happens</th></tr>
+        <tr><td>Pin "…" to…</td><td>The main entry. It only appears when text is selected, it does not show on an empty right click.</td></tr>
+        <tr><td>A collection name</td><td>Saves the selected text into that collection.</td></tr>
+        <tr><td>＋ New topic…</td><td>Opens the full board and asks you to name a new collection. Your selected text is saved into it right after you name it.</td></tr>
+      </table>
+      <p class="cappb-help-note">New, renamed, and deleted collections update in this menu automatically. The menu does not work on browser pages such as chrome:// or the Chrome Web Store, and it does not capture screenshots, use Alt+Shift+C or the Capture button for that.</p>
+    </section>
+
+    <section id="capture">
+      <h2>Screenshot capture</h2>
+      <p>Press <b>Alt+Shift+C</b> (or the Capture button in the popup), then drag a box over the part of the page you want. When you let go, the box stays on screen with its size shown above it, and a small action bar appears below it.</p>
+      <table>
+        <tr><th>Button</th><th>Key</th><th>What it does</th></tr>
+        <tr><td>Collection list</td><td></td><td>Chooses where <b>Pin</b> saves the image. It starts on the collection you used last.</td></tr>
+        <tr><td>Pin</td><td><kbd>Enter</kbd></td><td>Saves the screenshot on your board.</td></tr>
+        <tr><td>Copy</td><td><kbd>Ctrl</kbd> + <kbd>C</kbd></td><td>Copies the image so you can paste it into a chat, email, or document.</td></tr>
+        <tr><td>Download</td><td><kbd>Ctrl</kbd> + <kbd>S</kbd></td><td>Saves a PNG file to your Downloads folder.</td></tr>
+        <tr><td>✕</td><td><kbd>Esc</kbd></td><td>Cancels without saving anything.</td></tr>
+      </table>
+      <h3>Drawing on the screenshot</h3>
+      <p>A column of tools appears next to the selection. Click a tool, then draw inside the box. Click the same tool again to switch it off.</p>
+      <table>
+        <tr><th>Tool</th><th>How to use it</th></tr>
+        <tr><td>↗ Arrow</td><td>Drag from where the arrow starts to where it should point.</td></tr>
+        <tr><td>▭ Box</td><td>Drag to outline an area.</td></tr>
+        <tr><td>✎ Pen</td><td>Draw freehand while holding the mouse button.</td></tr>
+        <tr><td>T Text</td><td>Click where the text should go, type, then press <kbd>Enter</kbd>. Esc inside the text box discards it.</td></tr>
+        <tr><td>Colors</td><td>Click a color dot before drawing. It applies to the next thing you draw.</td></tr>
+        <tr><td>↶ Undo</td><td><kbd>Ctrl</kbd> + <kbd>Z</kbd> removes the last drawing.</td></tr>
+      </table>
+      <p class="cappb-help-note">Everything you draw is included when you Pin, Copy, or Download. Drawing a new selection box clears the drawings.</p>
+      <p class="cappb-help-note">Not happy with the box? Just drag again to draw a new one. The action bar is hidden before the screenshot is taken, so it never appears in the picture. Capture does not work on browser pages such as chrome:// or the Chrome Web Store.</p>
+    </section>
+
+    <section id="copying">
+      <h2>Copying text and images</h2>
+      <table>
+        <tr><th>Where</th><th>How</th></tr>
+        <tr><td>Any pin in the popup or board</td><td>Click <b>Copy</b>. It briefly says "Copied". For image pins this copies the picture itself, so you can paste it into chats and documents.</td></tr>
+        <tr><td>Quick find</td><td>Alt+Shift+F, search, press <b>Enter</b>.</td></tr>
+        <tr><td>Long messages</td><td>Click <b>View</b> to read the full text in a window, then copy from there.</td></tr>
+        <tr><td>Image pins</td><td><b>Download</b> saves the image as a PNG file.</td></tr>
+      </table>
+      <h3>Getting text into the extension</h3>
+      <ul>
+        <li><b>Select text, then open the popup.</b> The selection is filled in the message box for you.</li>
+        <li><b>Paste button</b> in the popup fills the message box from your clipboard in one click.</li>
+        <li>Choose a collection and press <b>Pin</b>. The popup remembers the last collection you used.</li>
+      </ul>
+    </section>
+
+    <section id="organize">
+      <h2>Tags and stars</h2>
+      <ul>
+        <li><b>+ tag</b> on any pin adds tags. Separate several with commas or spaces. Click the <b>×</b> on a tag to remove it.</li>
+        <li>On the full board, the <b>tag bar</b> filters every column. Click the tag again to clear the filter.</li>
+        <li>The board search box matches text and tags. Start with <code>#</code> to match tags only.</li>
+        <li>The <b>☆ star</b> keeps a pin at the top of its collection, and first in Quick find.</li>
+        <li>On the board you can also <b>drag</b> pins to reorder them or move them to another collection.</li>
+      </ul>
+    </section>
+
+    <section id="backup">
+      <h2>Backup and restore</h2>
+      <p>Use the <b>Export</b> and <b>Import</b> buttons at the top of the full board.</p>
+      <table>
+        <tr><th>Button</th><th>What it does</th></tr>
+        <tr><td>Export</td><td>Downloads one file named <code>captain-pin-board-DATE.json</code> with all your collections, text pins, image pins, tags and stars.</td></tr>
+        <tr><td>Import, Merge</td><td>Adds the pins from the file that you do not already have. Nothing you have now is deleted, and importing the same file twice does not create duplicates.</td></tr>
+        <tr><td>Import, Replace all</td><td>Deletes your current pins and restores exactly what is in the file. You are asked to confirm first.</td></tr>
+      </table>
+      <p class="cappb-help-note">To move your pins to another computer, Export here, copy the file across (email, Drive, USB), install the extension there and choose Import, then Merge. Keep a backup file somewhere safe before you remove or reinstall the extension.</p>
+    </section>
+
+    <section id="tips">
+      <h2>Tips and fixes</h2>
+      <ul>
+        <li><b>Capture does nothing:</b> browser pages (chrome://, the Web Store) cannot be captured. Try a normal website.</li>
+        <li><b>Paste button fails:</b> allow clipboard access if Chrome asks, or paste with Ctrl+V.</li>
+        <li><b>Your data</b> lives only in this browser. Removing the extension deletes it, so Export a backup now and then.</li>
+      </ul>
+    </section>
+  </main>
+
+  <script src="help.js"></script>
+</body>
+</html>

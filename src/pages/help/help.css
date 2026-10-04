@@ -1,0 +1,91 @@
+* { box-sizing: border-box; }
+
+.cappb-help-body {
+  margin: 0;
+  font-family: var(--cappb-font-ui);
+  color: var(--cappb-ink);
+  background: var(--cappb-board);
+}
+
+.cappb-help-header { padding: 16px 28px; }
+.cappb-help-header h1 { font-size: 17px; }
+
+.cappb-help-doc {
+  max-width: 860px;
+  margin: 24px auto;
+  padding: 28px 36px 36px;
+  background: var(--cappb-paper);
+  border-radius: var(--cappb-radius-xl);
+  box-shadow: var(--cappb-shadow-card);
+  line-height: 1.55;
+  font-size: 14px;
+}
+
+.cappb-help-toc { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.cappb-help-toc a {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cappb-ink);
+  background: var(--cappb-paper-2);
+  border: 1px solid var(--cappb-line);
+  border-radius: 999px;
+  padding: 3px 11px;
+  text-decoration: none;
+}
+.cappb-help-toc a:hover { background: var(--cappb-line); }
+
+.cappb-help-lead { font-size: 15px; margin: 0 0 8px; }
+
+.cappb-help-doc h2 {
+  font-size: 19px;
+  margin: 30px 0 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--cappb-line);
+}
+.cappb-help-doc h3 { font-size: 14px; margin: 20px 0 6px; color: var(--cappb-brick); }
+.cappb-help-doc p { margin: 8px 0; }
+.cappb-help-doc ul, .cappb-help-doc ol { padding-left: 22px; margin: 8px 0; }
+.cappb-help-doc li { margin: 5px 0; }
+
+.cappb-help-doc table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+.cappb-help-doc th, .cappb-help-doc td {
+  text-align: left;
+  vertical-align: top;
+  padding: 8px 10px;
+  border: 1px solid var(--cappb-line);
+}
+.cappb-help-doc th { background: var(--cappb-paper-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+.cappb-help-doc td:first-child { white-space: normal; width: 30%; }
+
+kbd {
+  font-family: var(--cappb-font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  background: #fff;
+  border: 1px solid var(--cappb-line);
+  border-bottom-width: 2px;
+  border-radius: var(--cappb-radius-sm);
+  padding: 1px 7px;
+  white-space: nowrap;
+}
+code { background: var(--cappb-paper-2); border-radius: var(--cappb-radius-sm); padding: 1px 5px; font-size: 13px; }
+
+.cappb-help-note {
+  font-size: 13px;
+  color: var(--cappb-muted);
+  background: var(--cappb-paper-2);
+  border-left: 3px solid var(--cappb-sage);
+  border-radius: var(--cappb-radius-sm);
+  padding: 8px 12px;
+}
+.cappb-help-link {
+  border: none;
+  background: none;
+  padding: 0;
+  font: inherit;
+  color: var(--cappb-brick);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) { .cappb-help-doc { margin: 0; border-radius: 0; padding: 20px 16px; } }

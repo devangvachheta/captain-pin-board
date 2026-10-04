@@ -14,7 +14,9 @@ Copy the fields below straight into the Developer Dashboard instead of writing t
 
   Save any message in seconds. Highlight text on any page, open the popup, and pin it to a collection with one click, the message box fills in automatically from your selection. Prefer the right click menu? Select text, right click, choose "Pin to", and pick a collection, or create a new one on the spot. Already copied something from somewhere else? Use the Paste button, or the regular keyboard shortcut, to drop it straight into the message box.
 
-  Capture anything you see on screen. Drag to select any part of a page, snipping tool style, and pin it as an image straight into a collection. Come back to it later, view it full size, or download it to your computer whenever you are ready.
+  Capture anything you see on screen. Drag to select any part of a page, snipping tool style, and pin it as an image straight into a collection. Draw arrows, boxes, freehand marks, and text on it with five colors and undo, then pin it, copy it to your clipboard, or download it as a PNG. Come back to it later and view it full size whenever you are ready.
+
+  Find things fast. Tag any message or image, star the important ones to keep them at the top, and filter the whole board by tag. Press the quick find shortcut anywhere to search your pins in a small window and copy one with Enter.
 
   Keep everything organized by topic. Create as many collections as you need, for example Marketing, Scripts, or Client Replies. Each collection shows how many messages are inside it, so you always know what you have saved.
 
@@ -22,7 +24,9 @@ Copy the fields below straight into the Developer Dashboard instead of writing t
 
   Manage every message or image with one click. View it in full, copy it to your clipboard, edit a message in place, download an image, or delete it with a quick confirmation, all from simple buttons on the note itself.
 
-  Jump straight to what you need. Keyboard shortcuts open the full board or start a capture without opening the popup first, and can be customized any time.
+  Jump straight to what you need. Keyboard shortcuts open the popup, open the full board, start a capture, or start quick find without any clicking, and can be customized any time. A built in guide explains every shortcut and the right click menu.
+
+  Back up and restore. Export everything to one file and import it again on any computer, merging it with what you already have or replacing it.
 
   Your data stays yours. Everything is stored only on your own device using Chrome's built in storage. Nothing is uploaded to any server, and no data is collected, shared, or sold.
 

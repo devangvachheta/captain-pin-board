@@ -9,6 +9,12 @@ A Chrome extension that lets you pin messages into collections such as Marketing
 * Inside a collection: view every pinned message, edit it in place, copy it, or delete it.
 * Every pinned message has View, Copy, Edit, and Delete. Long messages scroll inside a fixed height instead of stretching the page, View expands them, Copy puts the text on your clipboard.
 * Full board: click "Full board" in the popup for a corkboard view with one column per collection, recoloring, renaming, moving messages between collections, and search.
+* Keyboard shortcuts: Alt+Shift+E opens the popup, Alt+Shift+C captures an area, Alt+Shift+O opens the full board, Alt+Shift+F opens quick find. All can be changed at chrome://extensions/shortcuts.
+* Quick find: press Alt+Shift+F to search all your pins in a small window and copy one with Enter.
+* Tags and stars: tag any pin, filter the board by tag (or type #tag in search), and star pins to keep them at the top.
+* Screenshot capture: drag an area, draw on it (arrow, box, pen, text, colors, undo), then pin it, copy it, or download it as a PNG from an action bar.
+* Backup: Export and Import buttons on the full board save and restore all pins as a JSON file (merge or replace).
+* Guide: the Help button in the popup and on the board opens a full guide to shortcuts, the right click menu, and copying.
 * Right click menu: select text on any page, right click, choose "Pin to" and pick a collection, or create a new one on the spot.
 
 All data is stored locally on the device using chrome.storage.local. Nothing is sent to a server.
@@ -31,11 +37,16 @@ icons/                      toolbar and store icons
 src/
   services/
     storage.js              shared data layer over chrome.storage.local
+    backup.js               builds, validates and merges the Export/Import backup file
     background.js           right click menu handling (the service worker)
   common/
     common.css              design tokens (colors, radius, shadow) and shared component classes, all prefixed with cappb
     common.js                shared UI helpers used by both pages (date formatting, inline edit, copy, expand)
   pages/
+    help/
+      help.html, help.css, help.js        the built in guide page
+    quick/
+      quick.html, quick.css, quick.js     the Alt+Shift+F quick find window
     popup/
       popup.html, popup.css, popup.js     the toolbar popup
     board/

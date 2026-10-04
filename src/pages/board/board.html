@@ -13,10 +13,16 @@
       <h1 class="cappb-brand-name cappb-brand-title">Captain Pin Board</h1>
     </div>
     <div class="cappb-toolbar-actions">
-      <input id="searchInput" class="cappb-field cappb-search-input" type="text" placeholder="Search pinned messages" />
+      <input id="searchInput" class="cappb-field cappb-search-input" type="text" placeholder="Search messages or #tag" />
+      <button id="exportBtn" class="cappb-btn cappb-btn--ghost" title="Save all pins to a backup file">Export</button>
+      <button id="importBtn" class="cappb-btn cappb-btn--ghost" title="Restore pins from a backup file">Import</button>
+      <input id="importFile" type="file" accept=".json,application/json" class="cappb-hidden" />
+      <button id="helpBtn" class="cappb-btn cappb-btn--ghost">Help</button>
       <button id="addTopicBtn" class="cappb-btn cappb-btn--primary">New topic</button>
     </div>
   </header>
+
+  <div id="tagBar" class="cappb-tagbar cappb-hidden"></div>
 
   <main id="board" class="cappb-board"></main>
 
@@ -42,9 +48,11 @@
   <template id="noteTemplate">
     <article class="cappb-note cappb-pin-card">
       <p class="cappb-note-text cappb-pin-text" contenteditable="false" spellcheck="false" title="Click to edit"></p>
+      <div class="cappb-tags"></div>
       <div class="cappb-pin-footer">
         <span class="cappb-note-date"></span>
         <span class="cappb-pin-actions">
+          <button class="cappb-btn cappb-btn--icon cappb-star-btn cappb-note-star"></button>
           <button class="cappb-btn cappb-btn--icon cappb-note-view">View</button>
           <button class="cappb-btn cappb-btn--icon cappb-note-copy">Copy</button>
           <button class="cappb-btn cappb-btn--icon cappb-note-edit">Edit</button>
@@ -58,9 +66,11 @@
   <template id="imageNoteTemplate">
     <article class="cappb-note cappb-pin-card">
       <img class="cappb-note-image cappb-pin-image" alt="Pinned screenshot" />
+      <div class="cappb-tags"></div>
       <div class="cappb-pin-footer">
         <span class="cappb-note-date"></span>
         <span class="cappb-pin-actions">
+          <button class="cappb-btn cappb-btn--icon cappb-star-btn cappb-note-star"></button>
           <button class="cappb-btn cappb-btn--icon cappb-note-view">View</button>
           <button class="cappb-btn cappb-btn--icon cappb-note-copy">Copy</button>
           <button class="cappb-btn cappb-btn--icon cappb-note-download">Download</button>
@@ -72,6 +82,7 @@
   </template>
 
   <script src="../../services/storage.js"></script>
+  <script src="../../services/backup.js"></script>
   <script src="../../common/common.js"></script>
   <script src="board.js"></script>
 </body>
